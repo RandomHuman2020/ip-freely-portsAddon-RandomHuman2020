@@ -24,6 +24,14 @@ If you wish to check if a list of ports is up, provide the -p flag with a comma 
 
 Example: `python3 ./ipfreely.py -p 80,443,500,1234 192.168.0.3/32`
 
+## Screenshots
+<img width="535" height="149" alt="image" src="https://github.com/user-attachments/assets/ac5eb047-f933-495c-9e6d-560bf74dd91e" />
+
+<img width="541" height="126" alt="image" src="https://github.com/user-attachments/assets/36f3e259-a214-494d-9329-8c8ccecf0184" />
+
+<img width="653" height="172" alt="image" src="https://github.com/user-attachments/assets/3c3310ee-c501-426f-af8d-a27d627a9318" />
+
+
 ## Contributing
 If you wish to contribute code to this project, fork the repo, make your changes, and make a pull request.
 

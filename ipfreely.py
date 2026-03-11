@@ -44,13 +44,40 @@ def ping_host(ip):
     ping_result = ping(ip, unit='ms', timeout=1)
     return ping_result
 
-def check_ports(ports):
+def check_port(port, host):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(2) #timeout so we don't hang the script if the port ain't open
+    try:
+        s.connect((host, int(port)))
+        return f"Port {port} is OPEN"
+    except:
+        return f"Port {port} is CLOSED"
+
+checkPorts = False
 
 try:
-    subnet = sys.argv[1]
-    #subnet = input("gimme a subnet: ") # <- for debugging only!
+    if sys.argv[1] == "-p":
+        if "." in sys.argv[2]:
+            print("The -p flag was provided with no ports. Skipping port check.")
+            checkPorts = False
+            subnet = sys.argv[2]
+            #subnet = input("gimme a subnet: ") # <- for debugging only!
+        else:
+            ports = sys.argv[2].split(",")
+            checkPorts = True
+            try:
+                subnet = sys.argv[3]
+                #subnet = input("gimme a subnet: ") # <- for debugging only!
+            except IndexError:
+                print("No subnet was provided.")
+                exit()
+
+    else:
+        checkPorts = False
+        subnet = sys.argv[1]
+        #subnet = input("gimme a subnet: ") # <- for debugging only!
 except IndexError:
-    print("A subnet was not supplied.")
+    print("No arguments were provided.")
     exit()
 print(f"Pinging all hosts in subnet {subnet}")
 
@@ -60,18 +87,35 @@ successful_hosts = 0
 failed_hosts = 0
 online_hosts = []
 
-for host in hosts:
-    ping_result = ping(host)
-    if ping_result == None:
-        print(f"Host {host}... Timed out.")
-        timeout_hosts = timeout_hosts + 1
-    elif ping_result == False:
-        print(f"Host {host}... Could not connect.")
-        failed_hosts = failed_hosts + 1
-    else:
-        print(f"Host {host}... {ping_result}ms")
-        successful_hosts = successful_hosts + 1
-        online_hosts.append(host)
+if checkPorts:
+    for host in hosts:
+        ping_result = ping(host)
+        if ping_result == None:
+            print(f"Host {host}... Timed out.")
+            timeout_hosts = timeout_hosts + 1
+        elif ping_result == False:
+            print(f"Host {host}... Could not connect.")
+            failed_hosts = failed_hosts + 1
+        else:
+            print(f"Host {host}... {ping_result}ms")
+            for port in ports:
+                port_status = check_port(port, host)
+                print(port_status)
+            successful_hosts = successful_hosts + 1
+            online_hosts.append(host)
+else:
+    for host in hosts:
+        ping_result = ping(host)
+        if ping_result == None:
+            print(f"Host {host}... Timed out.")
+            timeout_hosts = timeout_hosts + 1
+        elif ping_result == False:
+            print(f"Host {host}... Could not connect.")
+            failed_hosts = failed_hosts + 1
+        else:
+            print(f"Host {host}... {ping_result}ms")
+            successful_hosts = successful_hosts + 1
+            online_hosts.append(host)
 
 print(f"Results: {successful_hosts} up, {failed_hosts} down, {timeout_hosts} timed out.")
 print("Online hosts:")

@@ -20,6 +20,10 @@ replace <subnet> with the subnet you wish to use in the 192.168.0.0/24 format.
 Give the script a subnet in the 0.0.0.0/0 format as an argument, and it will scan that subnet for devices.
 If you're running this script on Windows, it will need Administrator permission as pings require admin rights for whatever reason.
 
+If you wish to check if a list of ports is up, provide the -p flag with a comma seperated list of ports.
+
+Example: `python3 ./ipfreely.py -p 80,443,500,1234 192.168.0.3/32`
+
 ## Contributing
 If you wish to contribute code to this project, fork the repo, make your changes, and make a pull request.
 

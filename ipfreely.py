@@ -61,17 +61,14 @@ try:
             print("The -p flag was provided with no ports. Skipping port check.")
             checkPorts = False
             subnet = sys.argv[2]
-            #subnet = input("gimme a subnet: ") # <- for debugging only!
         else:
             ports = sys.argv[2].split(",")
             checkPorts = True
             try:
                 subnet = sys.argv[3]
-                #subnet = input("gimme a subnet: ") # <- for debugging only!
             except IndexError:
                 print("No subnet was provided.")
                 exit()
-
     else:
         checkPorts = False
         subnet = sys.argv[1]
@@ -100,7 +97,10 @@ if checkPorts:
             print(f"Host {host}... {ping_result}ms")
             for port in ports:
                 port_status = check_port(port, host)
-                print(port_status)
+                if 'CLOSED' in port_status:
+                    continue
+                else:
+                    print(port_status)
             successful_hosts = successful_hosts + 1
             online_hosts.append(host)
 else:
